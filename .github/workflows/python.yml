@@ -1,0 +1,38 @@
+name: Python Selenium Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy_and_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Deploy to Vercel
+        run: |
+          # Install Vercel CLI
+          npm install -g vercel
+
+          # Deploy to Vercel
+          vercel --token ${{ secrets.VERCEL_TOKEN }} --prod
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'  # Replace with your Python version
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install selenium
+
+      - name: Run tests
+        run: |
+          python test_script.py
