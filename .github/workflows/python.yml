@@ -4,29 +4,31 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
-  deploy_and_test:
+  test:
     runs-on: ubuntu-latest
+      
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Deploy to Vercel
-        run: |
-          # Install Vercel CLI
-          npm install -g vercel
-
-          # Deploy to Vercel
-          vercel --token ${{ secrets.VERCEL_TOKEN }} --prod
-
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.9'
+          python-version: '3.12.0'
+
+      - name: Install Chrome browser
+        run: |
+          sudo apt-get update
+          sudo apt-get install google-chrome-stable
+
+      - name: Install ChromeDriver
+        run: |
+          wget https://chromedriver.storage.googleapis.com/LATEST_RELEASE/chromedriver_linux64.zip
+          unzip chromedriver_linux64.zip
+          sudo mv chromedriver /usr/local/bin/
+          sudo chmod +x /usr/local/bin/chromedriver
 
       - name: Install dependencies
         run: |
