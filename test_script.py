@@ -1,31 +1,16 @@
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-import time
+from selenium.webdriver.chrome.options import Options
 
-# Initialize Chrome WebDriver (make sure ChromeDriver is in your PATH)
-driver = webdriver.Chrome()
+chrome_options = Options()
+chrome_options.add_argument("--headless")  # Run Chrome in headless mode
+chrome_options.add_argument("--no-sandbox")  # Bypass OS security model
 
-try:
-    # Navigate to the deployed webpage URL
-    driver.get("https://automated-testing.vercel.app/")
+# Path to chromedriver may vary based on your environment setup
+driver = webdriver.Chrome(executable_path='/usr/local/bin/chromedriver-linux64', options=chrome_options)
 
-    # Perform actions
-    name_input = driver.find_element_by_id("name")
-    name_input.send_keys("John Doe")
+# Example usage: navigate to a website and print title
+driver.get("https://automated-testing.vercel.app/")
+print("Page title:", driver.title)
 
-    email_input = driver.find_element_by_id("email")
-    email_input.send_keys("john.doe@example.com")
-
-    submit_button = driver.find_element_by_xpath("//input[@type='submit']")
-    submit_button.click()
-
-    time.sleep(2)  # Add a delay to see the result
-
-    # Assert expected results
-    assert "Submitted" in driver.page_source
-
-    print("Test passed!")
-
-finally:
-    # Close the browser
-    driver.quit()
+# Remember to quit the browser session to release resources
+driver.quit()
